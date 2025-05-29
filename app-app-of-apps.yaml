@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/sara-golombeck/gitops
+    repoURL: git@github.com:sara-golombeck/gitops.git
     targetRevision: HEAD
     path: applications 
   destination:
