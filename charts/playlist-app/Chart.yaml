@@ -1,17 +1,3 @@
-# apiVersion: v2
-# name: playlist-app
-# description: Playlist Management Application
-# type: application
-# version: 0.1.0
-# appVersion: "1.0.0"
-# keywords:
-#   - playlist
-#   - api
-#   - flask
-# maintainers:
-#   - name: Sara Golombeck
-#     email: sara.golombeck@example.com
-
 
 
 
@@ -19,16 +5,13 @@ apiVersion: v2
 name: playlist-app
 description: Playlist Management Application
 type: application
-version: 0.1.0
-appVersion: "1.0.0"
+version: 3.18.0
+appVersion: "{{.Values.deployment.image.tag}}"
 keywords:
   - playlist
   - api
   - flask
-maintainers:
-  - name: Sara Golombeck
-    email: sara.golombeck@example.com
 dependencies:
   - name: mongodb
-    version: "13.18.5"
+    version: "16.5.11"
     repository: "https://charts.bitnami.com/bitnami"

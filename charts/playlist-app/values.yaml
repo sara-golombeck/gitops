@@ -85,10 +85,12 @@
 # Default values for playlist-app
 replicaCount: 2
 
-image:
-  repository: "793786247026.dkr.ecr.ap-south-1.amazonaws.com/sara/playlists-app"
-  tag: "latest"
-  pullPolicy: IfNotPresent
+deployment:
+  image:
+    repository: "793786247026.dkr.ecr.ap-south-1.amazonaws.com/sara/playlists-app"
+    tag: "latest"
+    pullPolicy: IfNotPresent
+
 
 nameOverride: ""
 fullnameOverride: ""
