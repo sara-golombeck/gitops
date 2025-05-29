@@ -1,0 +1,178 @@
+# # Default values for playlist-app
+# replicaCount: 2
+
+# image:
+#   repository: "793786247026.dkr.ecr.ap-south-1.amazonaws.com/sara/playlists-app"
+#   tag: "latest"
+#   pullPolicy: IfNotPresent
+
+# nameOverride: ""
+# fullnameOverride: ""
+
+# service:
+#   type: ClusterIP
+#   port: 5000
+#   targetPort: 5000
+#   name: playlist-api
+
+# # Environment variables for the application
+# env:
+#   MONGODB_URI: "mongodb://playlist_user:userpassword123@mongodb-service:27017/playlists_db?authSource=playlists_db"
+#   FLASK_ENV: "production"
+#   LOG_LEVEL: "INFO"
+
+# # Resource limits and requests
+# resources:
+#   limits:
+#     cpu: 500m
+#     memory: 512Mi
+#   requests:
+#     cpu: 250m
+#     memory: 256Mi
+
+# # Horizontal Pod Autoscaler
+# autoscaling:
+#   enabled: false
+#   minReplicas: 2
+#   maxReplicas: 10
+#   targetCPUUtilizationPercentage: 80
+
+# # Health checks
+# livenessProbe:
+#   httpGet:
+#     path: /health
+#     port: 5000
+#   initialDelaySeconds: 30
+#   periodSeconds: 10
+#   failureThreshold: 3
+
+# readinessProbe:
+#   httpGet:
+#     path: /health
+#     port: 5000
+#   initialDelaySeconds: 10
+#   periodSeconds: 5
+#   failureThreshold: 3
+
+# # Security context
+# securityContext:
+#   runAsNonRoot: true
+#   runAsUser: 10000
+#   fsGroup: 10000
+
+# # Ingress configuration
+# ingress:
+#   enabled: false
+#   className: ""
+#   annotations: {}
+#   hosts:
+#     - host: playlist-api.local
+#       paths:
+#         - path: /
+#           pathType: Prefix
+#   tls: []
+
+# # Node selector
+# nodeSelector: {}
+
+# # Tolerations
+# tolerations: []
+
+# # Pod affinity
+# affinity: {}
+
+
+# Default values for playlist-app
+replicaCount: 2
+
+image:
+  repository: "793786247026.dkr.ecr.ap-south-1.amazonaws.com/sara/playlists-app"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 5000
+  targetPort: 5000
+  name: playlist-api
+
+# Environment variables for the application
+env:
+  MONGODB_URI: "mongodb://playlist-app-mongodb:27017/playlists_db"
+  FLASK_ENV: "production"
+  LOG_LEVEL: "INFO"
+
+# MongoDB dependency configuration
+mongodb:
+  auth:
+    enabled: false  # ← פשוט לבדיקה ראשונה
+  service:
+    port: 27017
+
+# Resource limits and requests
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+# Horizontal Pod Autoscaler
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
+# Health checks
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 5000
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 5000
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  failureThreshold: 3
+
+# Security context
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 10000
+  fsGroup: 10000
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: sara-cowsay.ddns.net
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: democrm-tls
+      hosts:
+        - sara-cowsay.ddns.net
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Pod affinity
+affinity: {}

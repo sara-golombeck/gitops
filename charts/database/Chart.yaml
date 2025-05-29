@@ -1,0 +1,13 @@
+apiVersion: v2
+name: database
+description: MongoDB database for playlist application
+type: application
+version: 0.1.0
+appVersion: "7.0"
+keywords:
+  - mongodb
+  - database
+  - nosql
+maintainers:
+  - name: Sara Golombeck
+    email: sara.beck@example.com

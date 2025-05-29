@@ -1,0 +1,80 @@
+# MongoDB configuration
+replicaCount: 1
+
+image:
+  repository: mongo
+  tag: "7.0"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: "mongodb"
+
+# MongoDB authentication
+auth:
+  enabled: true
+  rootUsername: "admin"
+  rootPassword: "mongopassword123"  # בproduction השתמש ב-secrets!
+  database: "playlists_db"
+  username: "playlist_user"
+  password: "userpassword123"  # בproduction השתמש ב-secrets!
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 27017
+  name: mongodb-service
+
+# Persistence
+persistence:
+  enabled: true
+  storageClass: "gp2"  # AWS EBS
+  size: 10Gi
+  accessMode: ReadWriteOnce
+
+# Resource limits
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+# Security context
+securityContext:
+  fsGroup: 999
+  runAsUser: 999
+  runAsGroup: 999
+
+# Health checks
+livenessProbe:
+  exec:
+    command:
+      - mongo
+      - --eval
+      - "db.adminCommand('ping')"
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+
+readinessProbe:
+  exec:
+    command:
+      - mongo
+      - --eval
+      - "db.adminCommand('ping')"
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 1
+  successThreshold: 1
+  failureThreshold: 6
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Pod affinity
+affinity: {}
