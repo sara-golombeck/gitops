@@ -78,7 +78,7 @@ ingress:
   className: "nginx"
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
   hosts:
     - host: sara-cowsay.ddns.net
       paths:
@@ -88,6 +88,10 @@ ingress:
     - secretName: playlist-app-tls
       hosts:
         - sara-cowsay.ddns.net
+clusterIssuer:
+  secretName: letsencrypt-prod
+  server: https://acme-v02.api.letsencrypt.org/directory
+  email: sara.beck.dev@gmail.com
 
 # Node selector
 nodeSelector: {}
