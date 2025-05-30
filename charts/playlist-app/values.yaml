@@ -81,10 +81,10 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-  tls:
-    - secretName: playlist-app-tls
-      hosts:
-        - sara-cowsay.ddns.net
+  # tls:
+  #   - secretName: playlist-app-tls
+  #     hosts:
+  #       - sara-cowsay.ddns.net
 
 # Node selector
 nodeSelector: {}
