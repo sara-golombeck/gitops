@@ -6,7 +6,9 @@ name: playlist-app
 description: Playlist Management Application
 type: application
 version: 3.18.0
-appVersion: "{{.Values.deployment.image.tag}}"
+# appVersion: "{{.Values.deployment.image.tag}}"
+appVersion: 1.9
+
 keywords:
   - playlist
   - api
