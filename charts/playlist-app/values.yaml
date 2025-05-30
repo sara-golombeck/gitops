@@ -10,6 +10,9 @@ deployment:
 
 nameOverride: ""
 fullnameOverride: ""
+certManager:
+  enabled: true
+  email: sara.beck.dev@gmail.com
 
 service:
   type: ClusterIP
