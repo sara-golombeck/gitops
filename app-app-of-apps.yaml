@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/sara-golombeck/gitops.git
     targetRevision: HEAD
-    path: applications 
+    path: application
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
