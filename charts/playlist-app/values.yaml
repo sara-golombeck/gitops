@@ -134,7 +134,8 @@ env:
 
 # MongoDB dependency configuration
 mongodb:
-  namespaceOverride: "mongodb"
+  global:
+    namespaceOverride: "mongodb"
   replicaCount: 2  # Added: MongoDB replicas
   auth:
     enabled: false
