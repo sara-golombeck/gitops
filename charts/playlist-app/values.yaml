@@ -1,4 +1,110 @@
 
+# replicaCount: 2
+
+# deployment:
+#   image:
+#     repository: "980921758549.dkr.ecr.ap-south-1.amazonaws.com/sara/playlists-app"
+#     tag: "latest"
+#     pullPolicy: IfNotPresent
+
+# nameOverride: ""
+# fullnameOverride: ""
+# certManager:
+#   enabled: true
+#   email: sara.beck.dev@gmail.com
+
+# service:
+#   type: ClusterIP
+#   port: 5000
+#   targetPort: 5000
+#   name: playlist-api
+
+# # Environment variables for the application
+# env:
+#   MONGODB_URI: "mongodb://playlist-app-mongodb:27017/playlists_db"
+#   FLASK_ENV: "production"
+#   LOG_LEVEL: "INFO"
+
+# # MongoDB dependency configuration
+# mongodb:
+#   namespaceOverride: "mongodb"
+
+#   auth:
+#     enabled: false  
+#   service:
+#     port: 27017
+
+
+# # Resource limits and requests
+# resources:
+#   limits:
+#     cpu: 500m
+#     memory: 512Mi
+#   requests:
+#     cpu: 250m
+#     memory: 256Mi
+
+# # Horizontal Pod Autoscaler
+# autoscaling:
+#   enabled: false
+#   minReplicas: 2
+#   maxReplicas: 10
+#   targetCPUUtilizationPercentage: 80
+
+# # Health checks
+# livenessProbe:
+#   httpGet:
+#     path: /health
+#     port: 5000
+#   initialDelaySeconds: 30
+#   periodSeconds: 10
+#   failureThreshold: 3
+
+# readinessProbe:
+#   httpGet:
+#     path: /health
+#     port: 5000
+#   initialDelaySeconds: 10
+#   periodSeconds: 5
+#   failureThreshold: 3
+
+# # Security context
+# securityContext:
+#   runAsNonRoot: true
+#   runAsUser: 10000
+#   fsGroup: 10000
+
+# # Ingress configuration
+# ingress:
+#   enabled: true
+#   className: "nginx"
+#   annotations:
+#     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+#     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+#   hosts:
+#     - host: sara-cowsay.ddns.net
+#       paths:
+#         - path: /
+#           pathType: Prefix
+#   tls:
+#     - secretName: playlist-app-tls
+#       hosts:
+#         - sara-cowsay.ddns.net
+# clusterIssuer:
+#   secretName: letsencrypt-prod
+#   server: https://acme-v02.api.letsencrypt.org/directory
+#   email: sara.beck.dev@gmail.com
+
+# # Node selector
+# nodeSelector: {}
+
+# # Tolerations
+# tolerations: []
+
+# # Pod affinity
+# affinity: {}
+
+
 replicaCount: 2
 
 deployment:
@@ -7,12 +113,12 @@ deployment:
     tag: "latest"
     pullPolicy: IfNotPresent
 
-
 nameOverride: ""
 fullnameOverride: ""
+
 certManager:
   enabled: true
-  email: sara.beck.dev@gmail.com
+  email: saradev@gmail.com
 
 service:
   type: ClusterIP
@@ -22,15 +128,17 @@ service:
 
 # Environment variables for the application
 env:
-  MONGODB_URI: "mongodb://playlist-app-mongodb:27017/playlists_db"
+  MONGODB_URI: "mongodb://playlist-app-mongodb.mongodb.svc.cluster.local:27017/playlists_db"  # Fixed: Added namespace FQDN
   FLASK_ENV: "production"
   LOG_LEVEL: "INFO"
 
 # MongoDB dependency configuration
 mongodb:
+  namespaceOverride: "mongodb"
+  replicaCount: 2  # Added: MongoDB replicas
   auth:
-    enabled: false  
-  service:
+    enabled: false
+  service:  # Fixed: Moved outside of auth block
     port: 27017
 
 # Resource limits and requests
@@ -78,7 +186,7 @@ ingress:
   className: "nginx"
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
   hosts:
     - host: sara-cowsay.ddns.net
       paths:
@@ -88,6 +196,7 @@ ingress:
     - secretName: playlist-app-tls
       hosts:
         - sara-cowsay.ddns.net
+
 clusterIssuer:
   secretName: letsencrypt-prod
   server: https://acme-v02.api.letsencrypt.org/directory
