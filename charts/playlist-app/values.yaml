@@ -136,10 +136,11 @@ env:
 mongodb:
   global:
     namespaceOverride: "mongodb"
-  replicaCount: 2  # Added: MongoDB replicas
+  architecture: replicaset
+  replicaCount: 2  
   auth:
     enabled: false
-  service:  # Fixed: Moved outside of auth block
+  service:  
     port: 27017
 
 # Resource limits and requests
