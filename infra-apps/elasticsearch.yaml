@@ -1,0 +1,111 @@
+# # gitops/infra-apps/elasticsearch.yaml
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: elasticsearch
+#   namespace: argocd
+#   finalizers:
+#     - resources-finalizer.argocd.argoproj.io
+# spec:
+#   project: default
+#   source:
+#     repoURL: https://helm.elastic.co
+#     chart: elasticsearch
+#     targetRevision: 8.5.1
+#     helm:
+#       values: |
+#         replicas: 11
+#         minimumMasterNodes: 2
+        
+#         esConfig:
+#           elasticsearch.yml: |
+#             cluster.name: "docker-cluster"
+#             network.host: 0.0.0.0
+#             discovery.type: zen
+#             discovery.zen.minimum_master_nodes: 2
+            
+#         resources:
+#           requests:
+#             cpu: "100m"
+#             memory: "512Mi"
+#           limits:
+#             cpu: "1000m"
+#             memory: "2Gi"
+            
+#         volumeClaimTemplate:
+#           accessModes: [ "ReadWriteOnce" ]
+#           resources:
+#             requests:
+#               storage: 10Gi
+              
+#         service:
+#           type: ClusterIP
+          
+#         persistence:
+#           enabled: true
+          
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: logging
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#       - CreateNamespace=true
+
+
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: elasticsearch
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://helm.elastic.co
+    chart: elasticsearch
+    targetRevision: 8.5.1
+    helm:
+      values: |
+        replicas: 1
+        minimumMasterNodes: 1 
+        
+        esConfig:
+          elasticsearch.yml: |
+            cluster.name: "docker-cluster"
+            network.host: 0.0.0.0
+            discovery.type: single-node  # תוקן: single-node במקום zen
+            
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "2Gi"
+            
+        volumeClaimTemplate:
+          accessModes: [ "ReadWriteOnce" ]
+          resources:
+            requests:
+              storage: 10Gi
+              
+        service:
+          type: ClusterIP
+          
+        persistence:
+          enabled: true
+          
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

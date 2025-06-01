@@ -1,0 +1,80 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fluentbit
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://fluent.github.io/helm-charts
+    chart: fluent-bit
+    targetRevision: 0.21.7
+    helm:
+      values: |
+        config:
+          service: |
+            [SERVICE]
+                Flush 1
+                Log_Level info
+                HTTP_Server On
+                HTTP_Port 2020
+
+          inputs: |
+            [INPUT]
+                Name tail
+                Path /var/log/containers/*playlist-app*.log
+                Tag kube.playlist.*
+                Parser docker
+                Mem_Buf_Limit 50MB
+
+          filters: |
+            [FILTER]
+                Name kubernetes
+                Match kube.*
+                Merge_Log On
+                K8S-Logging.Parser On
+
+            [FILTER]
+                Name parser
+                Match kube.playlist.*
+                Key_Name log
+                Parser json
+                Reserve_Data On
+
+          outputs: |
+            [OUTPUT]
+                Name es
+                Match kube.playlist.*
+                Host elasticsearch-master.logging.svc.cluster.local
+                Port 9200
+                Index playlist-logs
+                Logstash_Format On
+                Logstash_Prefix playlist-app
+                Logstash_DateFormat %Y.%m.%d
+
+          parsers: |
+            [PARSER]
+                Name json
+                Format json
+                Time_Key asctime
+                Time_Format %Y-%m-%dT%H:%M:%S
+
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+            
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
