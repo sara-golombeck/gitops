@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://helm.elastic.co
     chart: elasticsearch
-    targetRevision: 8.5.1
+    targetRevision: 7.17.3  # גרסה יציבה יותר
     helm:
       values: |
         replicas: 1
@@ -22,23 +22,21 @@ spec:
             network.host: 0.0.0.0
             discovery.type: single-node
             xpack.security.enabled: false
-            bootstrap.memory_lock: false
-            cluster.initial_master_nodes: ["elasticsearch-master-0"]
             
         resources:
           requests:
+            cpu: "200m"
+            memory: "512Mi"
+          limits:
             cpu: "500m"
             memory: "1Gi"
-          limits:
-            cpu: "1000m"
-            memory: "2Gi"
             
         volumeClaimTemplate:
           accessModes: [ "ReadWriteOnce" ]
           storageClassName: "gp2"
           resources:
             requests:
-              storage: 10Gi
+              storage: 5Gi  # קטן יותר
               
         service:
           type: ClusterIP
@@ -46,24 +44,16 @@ spec:
         persistence:
           enabled: true
           
-        # Memory settings
-        esJavaOpts: "-Xmx1g -Xms1g"
+        # Memory settings פשוטים
+        esJavaOpts: "-Xmx512m -Xms512m"
         
-        # Security context
-        podSecurityContext:
-          fsGroup: 1000
+        # הסרת security context שעלול לגרום לבעיות
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
           runAsUser: 1000
-          
-        # Probes adjustment
-        readinessProbe:
-          failureThreshold: 3
-          initialDelaySeconds: 30
-          periodSeconds: 30
-          successThreshold: 3
-          timeoutSeconds: 5
-          
-        # Anti-affinity disabled for single node
-        antiAffinity: "soft"
           
   destination:
     server: https://kubernetes.default.svc
