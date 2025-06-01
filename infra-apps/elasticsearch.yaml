@@ -11,7 +11,7 @@ spec:
       targetRevision: 21.1.0
       helm:
         valueFiles:
-          - $values/infra-apps/values/elastic-values.yaml
+          - $values/infra-apps/values/elasticsearch-values.yaml
     - repoURL: "git@github.com:sara-golombeck/gitops.git"
       targetRevision: HEAD
       ref: values
