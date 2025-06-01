@@ -1,11 +1,9 @@
-apiVersion: argoproj.io/v1alpha1
+# apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: elasticsearch
-  namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
+  namespace: argocd 
+spec: 
   destination:
     server: https://kubernetes.default.svc
     namespace: logging
@@ -13,60 +11,26 @@ spec:
   source:
     repoURL: https://helm.elastic.co
     chart: elasticsearch
-    targetRevision: 7.17.3  # chart version, לא ES version
+    targetRevision: 8.5.1
     helm:
-      values: |  # values, לא valuesObject
-        # Single node setup
-        replicas: 1
-        minimumMasterNodes: 1
-        
-        esConfig:
-          elasticsearch.yml: |
-            cluster.name: "elasticsearch"
-            network.host: 0.0.0.0
-            discovery.type: single-node
-            xpack.security.enabled: false
-            
-        resources:
-          requests:
-            cpu: "200m"  # לא 0m!
-            memory: "1Gi"
-          limits:
-            cpu: "500m"
-            memory: "2Gi"
-            
-        volumeClaimTemplate:
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 3Gi
-          storageClassName: "gp2"
-              
-        esJavaOpts: "-Xmx512m -Xms512m"
-        
-        service:
-          type: ClusterIP
-          
+      valuesObject:
         secret:
-          enabled: false  # לא password: elastic
-          
-        sysctlInitContainer:
-          enabled: false
-          
-        readinessProbe:
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          timeoutSeconds: 5
-          
-        livenessProbe:
-          initialDelaySeconds: 90
-          periodSeconds: 30
-          timeoutSeconds: 5
-          
+          password: elastic
+        resources:
+          requests: 
+            cpu: 0m
+          limits:
+            cpu: 500m
+          volumeClaimTemplate:
+            resources:
+              requests:
+                storage: 3Gi
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
+      syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true
+
+    # syncOptions: 
+    # - ServerSideApply=true
