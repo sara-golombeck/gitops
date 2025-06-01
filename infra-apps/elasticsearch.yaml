@@ -1,36 +1,65 @@
-# apiVersion: argoproj.io/v1alpha1
+# logging/elasticsearch/application.yaml
+apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: elasticsearch
-  namespace: argocd 
-spec: 
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: elasticsearch
+    targetRevision: "22.0.4"  # הגרסה המדויקת העדכנית
+    helm:
+      values: |
+        global:
+          kibanaEnabled: false  # נתחיל בלי Kibana
+        
+        master:
+          masterOnly: false
+          replicaCount: 1  # node בודד להתחלה
+          heapSize: "1g"
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "2Gi"
+            limits:
+              cpu: "1"
+              memory: "4Gi"
+          readinessProbe:
+            enabled: true
+          livenessProbe:
+            enabled: true
+            
+        data:
+          replicaCount: 0
+          
+        ingest:
+          enabled: false
+          
+        coordinating:
+          replicaCount: 0
+          
+        volumeClaimTemplate:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+          storageClassName: "gp2"
+          
+        persistence:
+          labels:
+            enabled: true
+            
+        security:
+          enabled: false  # בלי security להתחלה
+          
   destination:
     server: https://kubernetes.default.svc
     namespace: logging
-  project: default
-  source:
-    repoURL: https://helm.elastic.co
-    chart: elasticsearch
-    targetRevision: 8.5.1
-    helm:
-      valuesObject:
-        secret:
-          password: elastic
-        resources:
-          requests: 
-            cpu: 0m
-          limits:
-            cpu: 500m
-          volumeClaimTemplate:
-            resources:
-              requests:
-                storage: 3Gi
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-      syncOptions:
+    syncOptions:
       - CreateNamespace=true
-
-    # syncOptions: 
-    # - ServerSideApply=true
