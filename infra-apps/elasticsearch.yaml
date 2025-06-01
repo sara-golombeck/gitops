@@ -2,95 +2,32 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: elasticsearch
-  namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
+  namespace: argocd 
+spec: 
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
   project: default
   source:
-    repoURL: "https://charts.bitnami.com/bitnami"
+    repoURL: https://helm.elastic.co
     chart: elasticsearch
-    targetRevision: 21.1.0
+    targetRevision: 8.5.1
     helm:
-      values: |
-        # גרסה פשוטה ללא security
-        global:
-          kibanaEnabled: false
-          
-        master:
-          masterOnly: false
-          replicaCount: 1
-          heapSize: "512m"
-          resources:
-            requests:
-              cpu: "200m"
-              memory: "1Gi"
-            limits:
-              cpu: "1000m"
-              memory: "2Gi"
-          readinessProbe:
-            enabled: true
-            initialDelaySeconds: 90
-            periodSeconds: 10
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
-          livenessProbe:
-            enabled: true
-            initialDelaySeconds: 120
-            periodSeconds: 30
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
-            
-        data:
-          replicaCount: 0
-          
-        ingest:
-          enabled: false
-          
-        coordinating:
-          replicaCount: 0
-          
-        # תיקון: volumeClaimTemplate -> persistence
-        persistence:
-          enabled: true
-          storageClass: "gp2"
-          accessModes: 
-            - ReadWriteOnce
-          size: 10Gi
-          
-        # ללא security
-        security:
-          enabled: false
-          
-        # תיקון: sysctlImage -> initContainers
-        initContainers:
-          sysctlImage:
-            enabled: false
-          
-        # תיקון service configuration  
-        service:
-          type: ClusterIP
-          ports:
-            restAPI: 9200
-            
-        # הוספת הגדרות חשובות
-        config:
-          # Single node discovery
-          discovery.type: "single-node"
-          # Disable security
-          xpack.security.enabled: "false"
-          # Network settings
-          network.host: "0.0.0.0"
-          
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: logging
+      valuesObject:
+        secret:
+          password: elastic
+        resources:
+          requests: 
+            cpu: 0m
+          limits:
+            cpu: 500m
+          volumeClaimTemplate:
+            resources:
+              requests:
+                storage: 3Gi
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-      - ServerSideApply=true
+    # syncOptions: 
+    # - ServerSideApply=true
