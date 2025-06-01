@@ -13,10 +13,10 @@ spec:
   source:
     repoURL: https://helm.elastic.co
     chart: elasticsearch
-    targetRevision: 7.17.3
+    targetRevision: 7.17.3  # chart version, לא ES version
     helm:
-      values: |
-        # Single node configuration for development/staging
+      values: |  # values, לא valuesObject
+        # Single node setup
         replicas: 1
         minimumMasterNodes: 1
         
@@ -29,17 +29,17 @@ spec:
             
         resources:
           requests:
-            cpu: "200m"
+            cpu: "200m"  # לא 0m!
             memory: "1Gi"
           limits:
-            cpu: "1000m"
+            cpu: "500m"
             memory: "2Gi"
             
         volumeClaimTemplate:
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 10Gi
+              storage: 3Gi
           storageClassName: "gp2"
               
         esJavaOpts: "-Xmx512m -Xms512m"
@@ -47,26 +47,21 @@ spec:
         service:
           type: ClusterIP
           
-        # Disable security for now
         secret:
-          enabled: false
+          enabled: false  # לא password: elastic
           
-        # Disable problematic init containers
         sysctlInitContainer:
           enabled: false
           
-        # Simple probes
         readinessProbe:
           initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 5
-          failureThreshold: 3
           
         livenessProbe:
           initialDelaySeconds: 90
           periodSeconds: 30
           timeoutSeconds: 5
-          failureThreshold: 3
           
   syncPolicy:
     automated:
