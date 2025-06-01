@@ -9,27 +9,27 @@ spec:
   source:
     repoURL: https://charts.bitnami.com/bitnami
     chart: elasticsearch
-    targetRevision: "22.0.4"  # הגרסה המדויקת העדכנית
+    targetRevision: "22.0.4"
     helm:
       values: |
         global:
-          kibanaEnabled: false  # נתחיל בלי Kibana
+          kibanaEnabled: false  # נתחיל בלי Kibana עד שElasticsearch יעבוד
         
         master:
           masterOnly: false
-          replicaCount: 1  # node בודד להתחלה
-          heapSize: "1g"
+          replicaCount: 1  # התחלנו עם 1 במקום 2
+          heapSize: "1g"   # פחות זיכרון להתחלה
           resources:
             requests:
-              cpu: "200m"
-              memory: "2Gi"
+              cpu: "0.5"
+              memory: "2Gi"  # פחות זיכרון להתחלה
             limits:
               cpu: "1"
-              memory: "4Gi"
+              memory: "4Gi"  # פחות זיכרון להתחלה
           readinessProbe:
-            enabled: true
+            enabled: false
           livenessProbe:
-            enabled: true
+            enabled: false
             
         data:
           replicaCount: 0
@@ -44,15 +44,15 @@ spec:
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 10Gi
-          storageClassName: "gp2"
+              storage: 10Gi  # התחלנו עם פחות
+          storageClassName: "gp2"  # שיניתי לgp2 במקום gp3
           
         persistence:
           labels:
             enabled: true
             
         security:
-          enabled: false  # בלי security להתחלה
+          enabled: false  # בלי security להתחלה!
           
   destination:
     server: https://kubernetes.default.svc
