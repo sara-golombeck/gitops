@@ -1,61 +1,3 @@
-# # gitops/infra-apps/elasticsearch.yaml
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: elasticsearch
-#   namespace: argocd
-#   finalizers:
-#     - resources-finalizer.argocd.argoproj.io
-# spec:
-#   project: default
-#   source:
-#     repoURL: https://helm.elastic.co
-#     chart: elasticsearch
-#     targetRevision: 8.5.1
-#     helm:
-#       values: |
-#         replicas: 11
-#         minimumMasterNodes: 2
-        
-#         esConfig:
-#           elasticsearch.yml: |
-#             cluster.name: "docker-cluster"
-#             network.host: 0.0.0.0
-#             discovery.type: zen
-#             discovery.zen.minimum_master_nodes: 2
-            
-#         resources:
-#           requests:
-#             cpu: "100m"
-#             memory: "512Mi"
-#           limits:
-#             cpu: "1000m"
-#             memory: "2Gi"
-            
-#         volumeClaimTemplate:
-#           accessModes: [ "ReadWriteOnce" ]
-#           resources:
-#             requests:
-#               storage: 10Gi
-              
-#         service:
-#           type: ClusterIP
-          
-#         persistence:
-#           enabled: true
-          
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: logging
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-#     syncOptions:
-#       - CreateNamespace=true
-
-
-
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -72,24 +14,28 @@ spec:
     helm:
       values: |
         replicas: 1
-        minimumMasterNodes: 1 
+        minimumMasterNodes: 1
         
         esConfig:
           elasticsearch.yml: |
             cluster.name: "docker-cluster"
             network.host: 0.0.0.0
-            discovery.type: single-node  # תוקן: single-node במקום zen
+            discovery.type: single-node
+            xpack.security.enabled: false
+            bootstrap.memory_lock: false
+            cluster.initial_master_nodes: ["elasticsearch-master-0"]
             
         resources:
           requests:
-            cpu: "100m"
-            memory: "512Mi"
+            cpu: "500m"
+            memory: "1Gi"
           limits:
             cpu: "1000m"
             memory: "2Gi"
             
         volumeClaimTemplate:
           accessModes: [ "ReadWriteOnce" ]
+          storageClassName: "gp2"
           resources:
             requests:
               storage: 10Gi
@@ -99,6 +45,25 @@ spec:
           
         persistence:
           enabled: true
+          
+        # Memory settings
+        esJavaOpts: "-Xmx1g -Xms1g"
+        
+        # Security context
+        podSecurityContext:
+          fsGroup: 1000
+          runAsUser: 1000
+          
+        # Probes adjustment
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          successThreshold: 3
+          timeoutSeconds: 5
+          
+        # Anti-affinity disabled for single node
+        antiAffinity: "soft"
           
   destination:
     server: https://kubernetes.default.svc
