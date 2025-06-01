@@ -2,32 +2,76 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: elasticsearch
-  namespace: argocd 
-spec: 
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: logging
   project: default
   source:
     repoURL: https://helm.elastic.co
     chart: elasticsearch
-    targetRevision: 8.5.1
+    targetRevision: 7.17.3
     helm:
-      valuesObject:
-        secret:
-          password: elastic
+      values: |
+        # Single node configuration for development/staging
+        replicas: 1
+        minimumMasterNodes: 1
+        
+        esConfig:
+          elasticsearch.yml: |
+            cluster.name: "elasticsearch"
+            network.host: 0.0.0.0
+            discovery.type: single-node
+            xpack.security.enabled: false
+            
         resources:
-          requests: 
-            cpu: 0m
+          requests:
+            cpu: "200m"
+            memory: "1Gi"
           limits:
-            cpu: 500m
-          volumeClaimTemplate:
-            resources:
-              requests:
-                storage: 3Gi
+            cpu: "1000m"
+            memory: "2Gi"
+            
+        volumeClaimTemplate:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+          storageClassName: "gp2"
+              
+        esJavaOpts: "-Xmx512m -Xms512m"
+        
+        service:
+          type: ClusterIP
+          
+        # Disable security for now
+        secret:
+          enabled: false
+          
+        # Disable problematic init containers
+        sysctlInitContainer:
+          enabled: false
+          
+        # Simple probes
+        readinessProbe:
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          
+        livenessProbe:
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+          
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    # syncOptions: 
-    # - ServerSideApply=true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
