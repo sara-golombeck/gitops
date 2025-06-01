@@ -1,4 +1,3 @@
-# logging/elasticsearch/application.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -6,60 +5,23 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  source:
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: elasticsearch
-    targetRevision: "22.0.4"
-    helm:
-      values: |
-        global:
-          kibanaEnabled: false  # נתחיל בלי Kibana עד שElasticsearch יעבוד
-        
-        master:
-          masterOnly: false
-          replicaCount: 1  # התחלנו עם 1 במקום 2
-          heapSize: "1g"   # פחות זיכרון להתחלה
-          resources:
-            requests:
-              cpu: "0.5"
-              memory: "2Gi"  # פחות זיכרון להתחלה
-            limits:
-              cpu: "1"
-              memory: "4Gi"  # פחות זיכרון להתחלה
-          readinessProbe:
-            enabled: false
-          livenessProbe:
-            enabled: false
-            
-        data:
-          replicaCount: 0
-          
-        ingest:
-          enabled: false
-          
-        coordinating:
-          replicaCount: 0
-          
-        volumeClaimTemplate:
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 10Gi  # התחלנו עם פחות
-          storageClassName: "gp2"  # שיניתי לgp2 במקום gp3
-          
-        persistence:
-          labels:
-            enabled: true
-            
-        security:
-          enabled: false  # בלי security להתחלה!
-          
+  sources:
+    - repoURL: "https://charts.bitnami.com/bitnami"
+      chart: elasticsearch
+      targetRevision: 21.1.0
+      helm:
+        valueFiles:
+          - $values/infra-apps/values/elastic-values.yaml
+    - repoURL: "git@github.com:sara-golombeck/gitops.git"
+      targetRevision: HEAD
+      ref: values
   destination:
-    server: https://kubernetes.default.svc
+    server: "https://kubernetes.default.svc"
     namespace: logging
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
+      - ServerSideApply=true
       - CreateNamespace=true
