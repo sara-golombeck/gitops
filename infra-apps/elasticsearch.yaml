@@ -8,55 +8,84 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://helm.elastic.co
+    repoURL: "https://charts.bitnami.com/bitnami"
     chart: elasticsearch
-    targetRevision: 7.17.3  # גרסה יציבה יותר
+    targetRevision: 21.1.0
     helm:
       values: |
-        replicas: 1
-        minimumMasterNodes: 1
-        
-        esConfig:
-          elasticsearch.yml: |
-            cluster.name: "docker-cluster"
-            network.host: 0.0.0.0
-            discovery.type: single-node
-            xpack.security.enabled: false
-            
-        resources:
-          requests:
-            cpu: "200m"
-            memory: "512Mi"
-          limits:
-            cpu: "500m"
-            memory: "1Gi"
-            
-        volumeClaimTemplate:
-          accessModes: [ "ReadWriteOnce" ]
-          storageClassName: "gp2"
+        # גרסה פשוטה ללא security
+        global:
+          kibanaEnabled: false
+          
+        master:
+          masterOnly: false
+          replicaCount: 1
+          heapSize: "512m"
           resources:
             requests:
-              storage: 5Gi  # קטן יותר
-              
-        service:
-          type: ClusterIP
+              cpu: "200m"
+              memory: "1Gi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+          readinessProbe:
+            enabled: true
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            enabled: true
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            
+        data:
+          replicaCount: 0
           
+        ingest:
+          enabled: false
+          
+        coordinating:
+          replicaCount: 0
+          
+        # תיקון: volumeClaimTemplate -> persistence
         persistence:
           enabled: true
+          storageClass: "gp2"
+          accessModes: 
+            - ReadWriteOnce
+          size: 10Gi
           
-        # Memory settings פשוטים
-        esJavaOpts: "-Xmx512m -Xms512m"
-        
-        # הסרת security context שעלול לגרום לבעיות
-        securityContext:
-          capabilities:
-            drop:
-            - ALL
-          runAsNonRoot: true
-          runAsUser: 1000
+        # ללא security
+        security:
+          enabled: false
+          
+        # תיקון: sysctlImage -> initContainers
+        initContainers:
+          sysctlImage:
+            enabled: false
+          
+        # תיקון service configuration  
+        service:
+          type: ClusterIP
+          ports:
+            restAPI: 9200
+            
+        # הוספת הגדרות חשובות
+        config:
+          # Single node discovery
+          discovery.type: "single-node"
+          # Disable security
+          xpack.security.enabled: "false"
+          # Network settings
+          network.host: "0.0.0.0"
           
   destination:
-    server: https://kubernetes.default.svc
+    server: "https://kubernetes.default.svc"
     namespace: logging
   syncPolicy:
     automated:
@@ -64,3 +93,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true
