@@ -43,7 +43,7 @@ spec:
                 Match kube.*
                 Index fluent-bit
                 Type _doc
-                Host elasticsearch-master.logging.svc.cluster.local
+                Host elasticsearch.logging.svc.cluster.local
                 Port 9200
                 HTTP_User elastic
                 HTTP_Passwd 9sRLSqZOhtUpSpyn
