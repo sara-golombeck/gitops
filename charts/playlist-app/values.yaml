@@ -118,7 +118,7 @@ fullnameOverride: ""
 
 certManager:
   enabled: true
-  email: saradev@gmail.com
+  email: sara.beck.dev@gmail.com
 
 service:
   type: ClusterIP
@@ -128,7 +128,7 @@ service:
 
 # Environment variables for the application
 env:
-  MONGODB_URI: "mongodb://playlist-app-mongodb.mongodb.svc.cluster.local:27017/playlists_db"  # Fixed: Added namespace FQDN
+  MONGODB_URI: "mongodb://playlist-app-mongodb-headless.mongodb.svc.cluster.local:27017/playlists_db"
   FLASK_ENV: "production"
   LOG_LEVEL: "INFO"
 
