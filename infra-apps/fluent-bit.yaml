@@ -30,7 +30,7 @@ spec:
           inputs: |
             [INPUT]
                 Name tail
-                Path /var/log/containers/*weather*.log
+                Path /var/log/containers/*playlist*.log
                 Tag kube.*
                 Parser docker
                 Mem_Buf_Limit 50MB
@@ -50,7 +50,7 @@ spec:
                 tls On
                 tls.verify Off
                 Logstash_Format On
-                Logstash_Prefix weather-app
+                Logstash_Prefix playlist-app
                 Retry_Limit False
                 Suppress_Type_Name On
           
