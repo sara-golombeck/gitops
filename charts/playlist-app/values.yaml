@@ -140,7 +140,7 @@ mongodb:
     secretKeys:
       adminPassword: MONGODB_PASSWORD
       userPassword: MONGODB_PASSWORD
-      username: MONGODB_USERNAME
+    username: mongouser
   service:
     port: 27017
 
