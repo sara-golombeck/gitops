@@ -215,7 +215,7 @@ monitoring:
   enabled: true   
   path: "/metrics"
   interval: "30s"
-  portName: "playlist-api
+  portName: "playlist-api"
 
 # Node selector
 nodeSelector: {}
