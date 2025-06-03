@@ -20,7 +20,7 @@ spec:
             storageSpec:
               volumeClaimTemplate:
                 spec:
-                  storageClassName: gp2
+                  storageClassName: gp3
                   accessModes: ["ReadWriteOnce"]
                   resources:
                     requests:
@@ -32,7 +32,7 @@ spec:
           persistence:
             enabled: true
             size: 10Gi
-            storageClassName: gp2
+            storageClassName: gp3
           ingress:
             enabled: true
             ingressClassName: nginx
