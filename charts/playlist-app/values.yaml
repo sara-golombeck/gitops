@@ -119,6 +119,7 @@ certManager:
   enabled: true
   email: sara.beck.dev@gmail.com
 
+
 service:
   type: ClusterIP
   port: 5000
@@ -208,6 +209,12 @@ clusterIssuer:
   secretName: letsencrypt-prod
   server: https://acme-v02.api.letsencrypt.org/directory
   email: sara.beck.dev@gmail.com
+
+  
+monitoring:
+  enabled: true   
+  path: "/metrics"
+  interval: "30s"
 
 # Node selector
 nodeSelector: {}
