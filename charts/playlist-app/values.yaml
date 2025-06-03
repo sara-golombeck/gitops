@@ -210,11 +210,12 @@ clusterIssuer:
   server: https://acme-v02.api.letsencrypt.org/directory
   email: sara.beck.dev@gmail.com
 
-  
+
 monitoring:
   enabled: true   
   path: "/metrics"
   interval: "30s"
+  portName: "playlist-api
 
 # Node selector
 nodeSelector: {}
