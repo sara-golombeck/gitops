@@ -1,23 +1,15 @@
-# charts/playlist-app/templates/servicemonitor.yaml
 {{- if .Values.monitoring.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "playlist-app.fullname" . }}-servicemonitor
-  namespace: {{ .Values.monitoring.namespace | default .Release.Namespace }}
+  name: {{ include "playlist-app.fullname" . }}-metrics
   labels:
-    {{- include "playlist-app.labels" . | nindent 4 }}
-    release: {{ .Values.monitoring.prometheusRelease | default "kube-prometheus-stack" }}
+    release: kube-prometheus-stack 
 spec:
   selector:
     matchLabels:
       {{- include "playlist-app.selectorLabels" . | nindent 6 }}
   endpoints:
-  - port: http
-    path: /metrics
-    interval: {{ .Values.monitoring.scrapeInterval | default "30s" }}
-    scrapeTimeout: {{ .Values.monitoring.scrapeTimeout | default "10s" }}
-  namespaceSelector:
-    matchNames:
-    - {{ .Release.Namespace }}
+  - port: {{ .Values.service.name }}
+    path: {{ .Values.monitoring.path }}
 {{- end }}
