@@ -1,8 +1,0 @@
-monitoring:
-  enabled: true
-  port: 5000
-  path: "/metrics"
-  labels:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "5000" 
-    prometheus.io/path: "/metrics"
