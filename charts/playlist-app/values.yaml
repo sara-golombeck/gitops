@@ -2,7 +2,7 @@ replicaCount: 2
 
 deployment:
   image:
-    repository: "793786247026.dkr.ecr.ap-south-1.amazonaws.com/sara/playlists-app"
+    repository: "980921758549.dkr.ecr.ap-south-1.amazonaws.com/sara/playlists-app"
     tag: "latest"
     pullPolicy: IfNotPresent
 
