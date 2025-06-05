@@ -15,15 +15,15 @@ spec:
           kibanaEnabled: true
         master:
           masterOnly: false
-          replicaCount: 2
-          heapSize: "2g"
+          replicaCount: 1
+          heapSize: "1g"
           resources:
             requests:
               cpu: "0.5"
-              memory: "4Gi"
+              memory: "2Gi"
             limits:
               cpu: "1"
-              memory: "6Gi"
+              memory: "3Gi"
           readinessProbe:
             enabled: false
           livenessProbe:
