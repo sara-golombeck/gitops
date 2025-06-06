@@ -6,7 +6,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "playlist-app.fullname" . }}
-  namespace: {{ .Release.Namespace }}        # 👈 נוסף
+  namespace: {{ .Release.Namespace }}       
   labels:
     {{- include "playlist-app.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -15,7 +15,7 @@ metadata:
   {{- end }}
 spec:
   {{- with .Values.ingress.className }}
-  ingressClassName: {{ . | quote }}          # 👈 נוסף quote
+  ingressClassName: {{ . | quote }}   
   {{- end }}
   {{- if .Values.ingress.tls }}
   tls:
@@ -24,7 +24,7 @@ spec:
         {{- range .hosts }}
         - {{ . | quote }}
         {{- end }}
-      secretName: {{ .secretName | quote }}  # 👈 נוסף quote
+      secretName: {{ .secretName | quote }}  
     {{- end }}
   {{- end }}
   rules:

@@ -1,8 +1,8 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "playlist-app.fullname" . }}
+  namespace: {{ .Release.Namespace }}             
   labels:
     {{- include "playlist-app.labels" . | nindent 4 }}
 spec:
