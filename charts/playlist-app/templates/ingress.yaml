@@ -1,8 +1,12 @@
 {{- if .Values.ingress.enabled -}}
+{{- if not .Values.ingress.hosts }}
+{{- fail "ingress.hosts is required when ingress is enabled" }}
+{{- end }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "playlist-app.fullname" . }}
+  namespace: {{ .Release.Namespace }}        # 👈 נוסף
   labels:
     {{- include "playlist-app.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -11,7 +15,7 @@ metadata:
   {{- end }}
 spec:
   {{- with .Values.ingress.className }}
-  ingressClassName: {{ . }}
+  ingressClassName: {{ . | quote }}          # 👈 נוסף quote
   {{- end }}
   {{- if .Values.ingress.tls }}
   tls:
@@ -20,7 +24,7 @@ spec:
         {{- range .hosts }}
         - {{ . | quote }}
         {{- end }}
-      secretName: {{ .secretName }}
+      secretName: {{ .secretName | quote }}  # 👈 נוסף quote
     {{- end }}
   {{- end }}
   rules:

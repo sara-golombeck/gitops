@@ -68,14 +68,6 @@ livenessProbe:
   periodSeconds: 10
   failureThreshold: 3
 
-readinessProbe:
-  httpGet:
-    path: /health
-    port: 5000
-  initialDelaySeconds: 10
-  periodSeconds: 5
-  failureThreshold: 3
-
 # Security context
 securityContext:
   runAsNonRoot: true
@@ -89,6 +81,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   hosts:
     - host: sara-cowsay.ddns.net
       paths:
@@ -110,12 +103,3 @@ monitoring:
   path: "/metrics"
   interval: "30s"
   portName: "playlist-api"
-
-# Node selector
-nodeSelector: {}
-
-# Tolerations
-tolerations: []
-
-# Pod affinity
-affinity: {}
