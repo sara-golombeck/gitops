@@ -11,7 +11,6 @@ config:
         HTTP_Port 2020
         Health_Check On
   
-  ## https://docs.fluentbit.io/manual/pipeline/inputs
   inputs: |
     [INPUT]
         Name tail
@@ -21,7 +20,6 @@ config:
         Mem_Buf_Limit 50MB
         Skip_Long_Lines On
   
-  ## https://docs.fluentbit.io/manual/pipeline/outputs
   outputs: |
     [OUTPUT]
         Name es
