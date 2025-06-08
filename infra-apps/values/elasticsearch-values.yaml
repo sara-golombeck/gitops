@@ -7,11 +7,11 @@ master:
   heapSize: "2g"
   resources:
     requests:
-      cpu: "0.5"
-      memory: "4Gi"
+      cpu: "0.1"
+      memory: "1Gi"
     limits:
-      cpu: "1"
-      memory: "2Gi"
+      cpu: "0.5"
+      memory: "1.5Gi"
   readinessProbe:
     enabled: false
   livenessProbe:
