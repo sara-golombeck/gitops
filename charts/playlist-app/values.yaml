@@ -83,14 +83,14 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   hosts:
-    - host: sara-cowsay.ddns.net
+    - host: sara-portfolio.ddns.net
       paths:
         - path: /
           pathType: Prefix
   tls:
     - secretName: playlist-app-tls
       hosts:
-        - sara-cowsay.ddns.net
+        - sara-portfolio.ddns.net
 
 clusterIssuer:
   secretName: letsencrypt-prod
