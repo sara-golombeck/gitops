@@ -38,8 +38,6 @@ mongodb:
     username: mongouser
     databases:
       - "playlists_db"
-    usernames:
-      - "mongouser"
   service:
     port: 27017
 
