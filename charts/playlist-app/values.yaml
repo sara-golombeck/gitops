@@ -36,8 +36,8 @@ mongodb:
       adminPassword: MONGODB_PASSWORD
       userPassword: MONGODB_PASSWORD
     username: mongouser
-    databases:
-      - "playlists_db"
+    database: "playlists_db"
+
   service:
     port: 27017
 
