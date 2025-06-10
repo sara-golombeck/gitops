@@ -31,7 +31,7 @@ mongodb:
   replicaCount: 2
   auth:
     enabled: true
-    existingSecret: mongodb-credentials
+    existingSecret: mongodb-secret
     secretKeys:
       adminPassword: MONGODB_PASSWORD
       userPassword: MONGODB_PASSWORD
