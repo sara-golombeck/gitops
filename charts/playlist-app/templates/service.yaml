@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "zelda-app.fullname" . }}
+  name: {{ include "playlist-app.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "zelda-app.labels" . | nindent 4 }}
+    {{- include "playlist-app.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -13,4 +13,4 @@ spec:
       protocol: TCP
       name: {{ .Values.service.name | quote }}
   selector:
-    {{- include "zelda-app.selectorLabels" . | nindent 4 }}
+    {{- include "playlist-app.selectorLabels" . | nindent 4 }}

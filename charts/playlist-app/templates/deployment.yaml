@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "zelda-app.fullname" . }}
+  name: {{ include "playlist-app.fullname" . }}
   namespace: {{ .Release.Namespace }}             
   labels:
-    {{- include "zelda-app.labels" . | nindent 4 }}
+    {{- include "playlist-app.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "zelda-app.selectorLabels" . | nindent 6 }}
+      {{- include "playlist-app.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "zelda-app.selectorLabels" . | nindent 8 }}
+        {{- include "playlist-app.selectorLabels" . | nindent 8 }}
     spec:
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: zelda-app
+  name: playlist-app
   namespace: argocd
 spec:
   project: default

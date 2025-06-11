@@ -33,7 +33,7 @@ config:
         tls On
         tls.verify Off
         Logstash_Format On
-        Logstash_Prefix zelda-app
+        Logstash_Prefix playlist-app
         Retry_Limit False
         Suppress_Type_Name On
   

@@ -13,7 +13,6 @@ certManager:
   enabled: true
   email: sara.beck.dev@gmail.com
 
-
 service:
   type: ClusterIP
   port: 5000
@@ -86,7 +85,7 @@ ingress:
         - path: /
           pathType: Prefix
   tls:
-    - secretName: zelda-app-tls
+    - secretName: playlist-app-tls
       hosts:
         - sara-portfolio.ddns.net
 
