@@ -86,7 +86,7 @@ ingress:
         - path: /
           pathType: Prefix
   tls:
-    - secretName: playlist-app-tls
+    - secretName: zelda-app-tls
       hosts:
         - sara-portfolio.ddns.net
 

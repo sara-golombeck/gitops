@@ -1,11 +1,10 @@
 
 apiVersion: v2
-name: playlist-app
+name: zelda-app
 description: Playlist Management Application
 type: application
 version: 3.18.0
-# appVersion: "{{.Values.deployment.image.tag}}"
-appVersion: "latest"
+appVersion: "{{.Values.deployment.image.tag}}"
 
 keywords:
   - playlist

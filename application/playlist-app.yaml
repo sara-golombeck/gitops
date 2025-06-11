@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: playlist-app
+  name: zelda-app
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/sara-golombeck/gitops.git
     targetRevision: HEAD
-    path: charts/playlist-app
+    path: charts/zelda-app
   destination:
     server: https://kubernetes.default.svc
     namespace: playlists
