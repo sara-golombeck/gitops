@@ -44,7 +44,7 @@ status:
   conditions:
   - lastTransitionTime: "2025-06-11T07:06:01Z"
     message: ExternalSecret/elasticsearch-secrets is part of applications argocd/playlist-app
-      and zelda-app
+      and playlist-app
     type: SharedResourceWarning
   controllerNamespace: argocd
   health:
