@@ -1,5 +1,5 @@
 global:
- kibanaEnabled: false
+ kibanaEnabled: true
 
 master:
  masterOnly: false
