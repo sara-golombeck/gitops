@@ -14,7 +14,8 @@ config:
   inputs: |
     [INPUT]
         Name tail
-        Path /var/log/containers/*.log
+        
+        Path /var/log/containers/*playlist*.log
         Tag kube.*
         Parser docker
         Mem_Buf_Limit 50MB
