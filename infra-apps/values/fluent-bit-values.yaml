@@ -30,7 +30,7 @@ config:
         Port 9200
         HTTP_User elastic
         HTTP_Passwd 9sRLSqZOhtUpSpyn
-        tls On
+        tls Off
         tls.verify Off
         Logstash_Format On
         Logstash_Prefix playlist-app
