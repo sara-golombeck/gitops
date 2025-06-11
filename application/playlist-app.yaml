@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/sara-golombeck/gitops.git
     targetRevision: HEAD
-    path: charts/zelda-app
+    path: charts/playlist-app
   destination:
     server: https://kubernetes.default.svc
     namespace: playlists
