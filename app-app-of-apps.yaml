@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/sara-golombeck/gitops.git
-    targetRevision: HEAD
+    targetRevision: main
     path: application
   destination:
     server: https://kubernetes.default.svc
